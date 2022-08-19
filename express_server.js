@@ -37,7 +37,7 @@ app.post("/urls", (req, res) => {
   console.log(req.body);
   const newId = generateRandomString();
   urlDatabase[newId] = req.body.longURL;
-  res.redirect('/urls');
+  res.redirect(`/urls/:${newId}`);
 });
 
 app.listen(PORT, () => {
