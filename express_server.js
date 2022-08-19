@@ -39,6 +39,7 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+// Refer a url
 app.get("/urls/:id", (req, res) => {
   const templateVars = {
     username: req.cookies["username"],
@@ -48,6 +49,7 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+// Create new url
 app.post("/urls", (req, res) => {
   console.log(req.body);
   const newId = generateRandomString();
@@ -55,17 +57,20 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${newId}`);
 });
 
+// Redirect to original url
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
   res.redirect(longURL);
 });
 
+// Delete a url
 app.post("/urls/:id/delete", (req, res) => {
   const { id } = req.params;
   delete urlDatabase[id];
   res.redirect('/urls');
 });
 
+// Update a existing url
 app.post("/urls/:id", (req, res) => {
   const { id } = req.params;
   const { newLongURL } = req.body;
