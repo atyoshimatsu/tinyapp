@@ -1,3 +1,4 @@
+const { ID_LENGTH, CHARACTERS } = require('./constants');
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
@@ -34,9 +35,20 @@ app.get("/urls/:id", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);
-  res.send("Ok");
+  const newId = generateRandomString();
+  urlDatabase[newId] = req.body.longURL;
+  res.redirect('/urls');
 });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+const generateRandomString = () => {
+  let randomString = '';
+  do {
+    randomString = new Array(ID_LENGTH).fill(null).map(n => CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)]).join('');
+  } while (randomString in urlDatabase);
+
+  return randomString;
+};
