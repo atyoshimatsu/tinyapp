@@ -44,7 +44,11 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id] };
+  const templateVars = {
+    username: req.cookies["username"],
+    id: req.params.id,
+    longURL: urlDatabase[req.params.id],
+  };
   res.render("urls_show", templateVars);
 });
 
