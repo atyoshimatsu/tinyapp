@@ -47,7 +47,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.clearCookie('user_id');
-  res.redirect("/urls");
+  res.redirect("/login");
 });
 
 app.get("/register", (req, res) => {
@@ -82,6 +82,10 @@ app.get("/", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const userId = req.cookies['user_id'];
+  if (!userId) {
+    res.redirect("/login");
+    return;
+  }
   const templateVars = {
     user: users[userId],
     urls: urlDatabase,
@@ -91,6 +95,10 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   const userId = req.cookies['user_id'];
+  if (!userId) {
+    res.redirect("/login");
+    return;
+  }
   const templateVars = {
     user: users[userId],
   };
@@ -100,6 +108,10 @@ app.get("/urls/new", (req, res) => {
 // Refer a url
 app.get("/urls/:id", (req, res) => {
   const userId = req.cookies['user_id'];
+  if (!userId) {
+    res.redirect("/login");
+    return;
+  }
   const templateVars = {
     user: users[userId],
     id: req.params.id,
@@ -110,6 +122,11 @@ app.get("/urls/:id", (req, res) => {
 
 // Create new url
 app.post("/urls", (req, res) => {
+  const userId = req.cookies['user_id'];
+  if (!userId) {
+    res.redirect("/login");
+    return;
+  }
   console.log(req.body);
   const newId = generateRandomString();
   urlDatabase[newId] = req.body.longURL;
@@ -118,12 +135,22 @@ app.post("/urls", (req, res) => {
 
 // Redirect to original url
 app.get("/u/:id", (req, res) => {
+  const userId = req.cookies['user_id'];
+  if (!userId) {
+    res.redirect("/login");
+    return;
+  }
   const longURL = urlDatabase[req.params.id];
   res.redirect(longURL);
 });
 
 // Delete a url
 app.post("/urls/:id/delete", (req, res) => {
+  const userId = req.cookies['user_id'];
+  if (!userId) {
+    res.redirect("/login");
+    return;
+  }
   const { id } = req.params;
   delete urlDatabase[id];
   res.redirect('/urls');
@@ -131,6 +158,11 @@ app.post("/urls/:id/delete", (req, res) => {
 
 // Update a existing url
 app.post("/urls/:id", (req, res) => {
+  const userId = req.cookies['user_id'];
+  if (!userId) {
+    res.redirect("/login");
+    return;
+  }
   const { id } = req.params;
   const { newLongURL } = req.body;
   console.log(id, newLongURL);
