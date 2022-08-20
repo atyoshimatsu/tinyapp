@@ -34,8 +34,13 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
   const userId = findUserIdByEmail(email);
+  if (!userId || password !== users[userId]['password']) {
+    res.status(403);
+    res.redirect("/40x");
+    return;
+  }
   res.cookie('user_id', userId);
   res.redirect("/urls");
 });
