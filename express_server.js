@@ -35,13 +35,13 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
-  const userId = findUserIdByEmail(email);
-  if (!userId || password !== users[userId]['password']) {
+  const user = getUserByEmail(email);
+  if (!user || password !== users[user]['password']) {
     res.status(403);
     res.redirect("/error/403");
     return;
   }
-  res.cookie('user_id', userId);
+  res.cookie('user_id', user['id']);
   res.redirect("/urls");
 });
 
@@ -61,7 +61,7 @@ app.get("/register", (req, res) => {
 // Create new user
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
-  if (email === '' || password === '' || findUserIdByEmail(email) !== null) {
+  if (email === '' || password === '' || getUserByEmail(email) !== null) {
     res.status(400);
     res.redirect("/error/400");
     return;
@@ -189,10 +189,10 @@ const generateRandomString = () => {
   return randomString;
 };
 
-const findUserIdByEmail = (email) => {
+const getUserByEmail = (email) => {
   for (const user in users) {
     if (users[user]['email'] === email) {
-      return users[user].id;
+      return user;
     }
   }
   return null;
