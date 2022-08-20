@@ -41,7 +41,7 @@ app.post("/login", (req, res) => {
     res.redirect("/error/403");
     return;
   }
-  res.cookie('user_id', user['id']);
+  res.cookie('user_id', users[user]['id']);
   res.redirect("/urls");
 });
 
