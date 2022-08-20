@@ -25,6 +25,14 @@ const users = {
   },
 };
 
+app.get("/login", (req, res) => {
+  const userId = req.cookies['user_id'];
+  const templateVars = {
+    user: users[userId],
+  };
+  res.render("user_login", templateVars);
+});
+
 app.post("/login", (req, res) => {
   const { email } = req.body;
   const userId = findUserIdByEmail(email);
