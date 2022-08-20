@@ -19,18 +19,10 @@
       </div>
     </div>
     <% if (!user) { %>
-      <form class="form-inline justify-content-center" action="/login" method="POST">
-        <div class="form-group">
-          <input
-            class="form-control"
-            type="text"
-            name="email"
-            placeholder="email"
-            style="width: 180px; margin: 0 1em"
-          />
-          <button type="submit" class="btn btn-outline-light">Login</button>
-        </div>
-      </form>
+      <div class="navbar-nav">
+        <a class="navbar-brand" href="/login">Login</a>
+        <a class="navbar-brand" href="/register">Register</a>
+      </div>
     <% } else { %>
       <p style="color: white; margin: 0 10px 0 0">Logged in as <b><%= user.email %></b></p>
       <form class="form-inline" action="/logout" method="POST">
