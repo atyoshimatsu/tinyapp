@@ -48,6 +48,11 @@ app.get("/register", (req, res) => {
 // Create new user
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
+  if (email === '' || password === '' || findUserIdByEmail(email) !== null) {
+    res.status(400);
+    res.redirect("/40x");
+    return;
+  }
   const id = generateRandomString();
   users[id] = {
     id,
@@ -118,6 +123,15 @@ app.post("/urls/:id", (req, res) => {
   console.log(id, newLongURL);
   urlDatabase[id] = newLongURL;
   res.redirect(`/urls/${id}`);
+});
+
+// display error page
+app.get("/40x", (req, res) => {
+  const userId = req.cookies['user_id'];
+  const templateVars = {
+    user: users[userId],
+  };
+  res.render("40x_error", templateVars);
 });
 
 app.listen(PORT, () => {
