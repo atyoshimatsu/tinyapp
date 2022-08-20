@@ -1,4 +1,4 @@
-const { PORT, ID_LENGTH, CHARACTERS } = require('./constants');
+const { PORT, ID_LENGTH, CHARACTERS, ERROR_MESSAGES } = require('./constants');
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -38,7 +38,7 @@ app.post("/login", (req, res) => {
   const userId = findUserIdByEmail(email);
   if (!userId || password !== users[userId]['password']) {
     res.status(403);
-    res.redirect("/40x");
+    res.redirect("/error/403");
     return;
   }
   res.cookie('user_id', userId);
@@ -63,7 +63,7 @@ app.post("/register", (req, res) => {
   const { email, password } = req.body;
   if (email === '' || password === '' || findUserIdByEmail(email) !== null) {
     res.status(400);
-    res.redirect("/40x");
+    res.redirect("/error/400");
     return;
   }
   const id = generateRandomString();
@@ -139,10 +139,12 @@ app.post("/urls/:id", (req, res) => {
 });
 
 // display error page
-app.get("/40x", (req, res) => {
+app.get("/error/:error_code", (req, res) => {
+  const errorCode = req.params.error_code;
   const userId = req.cookies['user_id'];
   const templateVars = {
     user: users[userId],
+    errorMessage: ERROR_MESSAGES[errorCode],
   };
   res.render("40x_error", templateVars);
 });
