@@ -4,7 +4,7 @@ const CHARACTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567
 const ERROR_MESSAGES = {
   '400': 'The Email or password might be empty, or the email is already existing.',
   '403': 'The Email or password is NOT correct, or the email is NOT existing.',
-}
+};
 
 module.exports = {
   PORT,
