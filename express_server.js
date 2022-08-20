@@ -81,11 +81,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const userId = req.cookies['user_id'];
-  if (!userId) {
+  if (!isLoggedin(req)) {
     res.redirect("/login");
     return;
   }
+  const userId = req.cookies['user_id'];
   const templateVars = {
     user: users[userId],
     urls: urlDatabase,
@@ -94,11 +94,11 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const userId = req.cookies['user_id'];
-  if (!userId) {
+  if (!isLoggedin(req)) {
     res.redirect("/login");
     return;
   }
+  const userId = req.cookies['user_id'];
   const templateVars = {
     user: users[userId],
   };
@@ -107,11 +107,11 @@ app.get("/urls/new", (req, res) => {
 
 // Refer a url
 app.get("/urls/:id", (req, res) => {
-  const userId = req.cookies['user_id'];
-  if (!userId) {
+  if (!isLoggedin(req)) {
     res.redirect("/login");
     return;
   }
+  const userId = req.cookies['user_id'];
   const templateVars = {
     user: users[userId],
     id: req.params.id,
@@ -122,8 +122,7 @@ app.get("/urls/:id", (req, res) => {
 
 // Create new url
 app.post("/urls", (req, res) => {
-  const userId = req.cookies['user_id'];
-  if (!userId) {
+  if (!isLoggedin(req)) {
     res.redirect("/login");
     return;
   }
@@ -135,8 +134,7 @@ app.post("/urls", (req, res) => {
 
 // Redirect to original url
 app.get("/u/:id", (req, res) => {
-  const userId = req.cookies['user_id'];
-  if (!userId) {
+  if (!isLoggedin(req)) {
     res.redirect("/login");
     return;
   }
@@ -146,8 +144,7 @@ app.get("/u/:id", (req, res) => {
 
 // Delete a url
 app.post("/urls/:id/delete", (req, res) => {
-  const userId = req.cookies['user_id'];
-  if (!userId) {
+  if (!isLoggedin(req)) {
     res.redirect("/login");
     return;
   }
@@ -158,14 +155,12 @@ app.post("/urls/:id/delete", (req, res) => {
 
 // Update a existing url
 app.post("/urls/:id", (req, res) => {
-  const userId = req.cookies['user_id'];
-  if (!userId) {
+  if (!isLoggedin(req)) {
     res.redirect("/login");
     return;
   }
   const { id } = req.params;
   const { newLongURL } = req.body;
-  console.log(id, newLongURL);
   urlDatabase[id] = newLongURL;
   res.redirect(`/urls/${id}`);
 });
@@ -201,4 +196,8 @@ const findUserIdByEmail = (email) => {
     }
   }
   return null;
+};
+
+const isLoggedin = (req) => {
+  return req.cookies['user_id'] !== undefined;
 };
