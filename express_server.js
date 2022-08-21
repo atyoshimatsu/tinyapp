@@ -28,6 +28,7 @@ const users = {
 app.get("/login", (req, res) => {
   const userId = req.cookies['user_id'];
   const templateVars = {
+    title: 'Login',
     user: users[userId],
   };
   res.render("user_login", templateVars);
@@ -53,6 +54,7 @@ app.post("/logout", (req, res) => {
 app.get("/register", (req, res) => {
   const userId = req.cookies['user_id'];
   const templateVars = {
+    title: 'Register',
     user: users[userId],
   };
   res.render("user_register", templateVars);
@@ -87,6 +89,7 @@ app.get("/urls", (req, res) => {
   }
   const userId = req.cookies['user_id'];
   const templateVars = {
+    title: 'URLs',
     user: users[userId],
     urls: urlDatabase,
   };
@@ -100,6 +103,7 @@ app.get("/urls/new", (req, res) => {
   }
   const userId = req.cookies['user_id'];
   const templateVars = {
+    title: 'New URL',
     user: users[userId],
   };
   res.render("urls_new", templateVars);
@@ -113,6 +117,7 @@ app.get("/urls/:id", (req, res) => {
   }
   const userId = req.cookies['user_id'];
   const templateVars = {
+    title: 'URL',
     user: users[userId],
     id: req.params.id,
     longURL: urlDatabase[req.params.id],
@@ -126,7 +131,6 @@ app.post("/urls", (req, res) => {
     res.redirect("/login");
     return;
   }
-  console.log(req.body);
   const newId = generateRandomString();
   urlDatabase[newId] = req.body.longURL;
   res.redirect(`/urls/${newId}`);
@@ -170,6 +174,7 @@ app.get("/error/:error_code", (req, res) => {
   const errorCode = req.params.error_code;
   const userId = req.cookies['user_id'];
   const templateVars = {
+    title: 'Error',
     user: users[userId],
     errorMessage: ERROR_MESSAGES[errorCode],
   };
