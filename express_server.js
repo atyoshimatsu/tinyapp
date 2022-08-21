@@ -56,6 +56,10 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
+  if (isLoggedin(req)) {
+    res.redirect("/urls");
+    return;
+  }
   const userId = req.cookies['user_id'];
   const templateVars = {
     title: 'Register',
