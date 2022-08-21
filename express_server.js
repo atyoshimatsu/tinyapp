@@ -26,6 +26,10 @@ const users = {
 };
 
 app.get("/login", (req, res) => {
+  if (isLoggedin(req)) {
+    res.redirect("/urls");
+    return;
+  }
   const userId = req.cookies['user_id'];
   const templateVars = {
     title: 'Login',
