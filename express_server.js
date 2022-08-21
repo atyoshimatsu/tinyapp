@@ -264,7 +264,7 @@ const urlsForUser = (userId) => {
       urls[urlId] = {
         longURL: urlDatabase[urlId]['longURL'],
         userId,
-      }
+      };
     }
   }
   return urls;
