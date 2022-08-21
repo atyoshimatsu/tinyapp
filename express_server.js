@@ -8,8 +8,18 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    userId: "userRandomID",
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userId: "userRandomID",
+  },
+  "4glap5": {
+    longURL: "http://www.example.com",
+    userId: "user2RandomID",
+  },
 };
 
 const users = {
@@ -128,7 +138,7 @@ app.get("/urls/:id", (req, res) => {
     title: 'URL',
     user: users[userId],
     id: req.params.id,
-    longURL: urlDatabase[req.params.id],
+    longURL: urlDatabase[req.params.id]["longURL"],
   };
   res.render("urls_show", templateVars);
 });
@@ -140,7 +150,10 @@ app.post("/urls", (req, res) => {
     return;
   }
   const newId = generateRandomString();
-  urlDatabase[newId] = req.body.longURL;
+  urlDatabase[newId] = {
+    longURL: req.body.longURL,
+    userId: req.cookies['user_id'],
+  };
   res.redirect(`/urls/${newId}`);
 });
 
@@ -151,7 +164,7 @@ app.get("/u/:id", (req, res) => {
     res.redirect("/error/404");
     return;
   }
-  const longURL = urlDatabase[req.params.id];
+  const longURL = urlDatabase[req.params.id]["longURL"];
   res.redirect(longURL);
 });
 
@@ -174,7 +187,7 @@ app.post("/urls/:id", (req, res) => {
   }
   const { id } = req.params;
   const { newLongURL } = req.body;
-  urlDatabase[id] = newLongURL;
+  urlDatabase[id]["longURL"] = newLongURL;
   res.redirect(`/urls/${id}`);
 });
 
