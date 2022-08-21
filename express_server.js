@@ -53,7 +53,7 @@ app.post("/login", (req, res) => {
   const user = getUserByEmail(email);
   if (!user || password !== users[user]['password']) {
     res.status(403);
-    res.redirect("/error/403");
+    res.redirect("/error/403_INCORRECT");
     return;
   }
   res.cookie('user_id', users[user]['id']);
@@ -109,7 +109,7 @@ app.get("/urls", (req, res) => {
   const templateVars = {
     title: 'URLs',
     user: users[userId],
-    urls: urlDatabase,
+    urls: urlsForUser(userId),
   };
   res.render('urls_index', templateVars);
 });
@@ -133,11 +133,16 @@ app.get("/urls/:id", (req, res) => {
     res.redirect("/login");
     return;
   }
+  const { id } = req.params;
+  if (!canAccessURL(req, id)) {
+    res.redirect("/error/403_NO_ACCESS");
+    return;
+  }
   const userId = req.cookies['user_id'];
   const templateVars = {
     title: 'URL',
     user: users[userId],
-    id: req.params.id,
+    id,
     longURL: urlDatabase[req.params.id]["longURL"],
   };
   res.render("urls_show", templateVars);
@@ -227,4 +232,31 @@ const getUserByEmail = (email) => {
 
 const isLoggedin = (req) => {
   return req.cookies['user_id'] !== undefined;
+};
+
+/**
+ * @param {string} userId
+ * @returns {object} urls
+ */
+const urlsForUser = (userId) => {
+  const urls = {};
+  for (const urlId in urlDatabase) {
+    if (urlDatabase[urlId]['userId'] === userId) {
+      urls[urlId] = {
+        longURL: urlDatabase[urlId]['longURL'],
+        userId,
+      }
+    }
+  }
+  return urls;
+};
+
+/**
+ * @param {Request} req
+ * @param {string} urlId
+ * @returns {boolean}
+ */
+const canAccessURL = (req, urlId) => {
+  const userId = req.cookies['user_id'];
+  return urlId in urlsForUser(userId);
 };
