@@ -1,4 +1,5 @@
 const { PORT, ID_LENGTH, CHARACTERS, ERROR_MESSAGES } = require('./constants');
+const bcrypt = require("bcryptjs");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -26,12 +27,12 @@ const users = {
   userRandomID: {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur",
+    password: '$2a$10$ebOP.1X6dOYQ4esjE1FL8.gjMq8/hNbyg476Fl30dtXUz3lPhlwzK',
   },
   user2RandomID: {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "dishwasher-funk",
+    password: '$2a$10$0rCd2gHhmcsqV/Age9AvKO4YIPRcosDRTebzR2GjTqDaFerQrFcYm',
   },
 };
 
@@ -51,7 +52,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   const user = getUserByEmail(email);
-  if (!user || password !== users[user]['password']) {
+  if (!user || !bcrypt.compareSync(password, users[user]['password'])) {
     res.status(403);
     res.redirect("/error/403_INCORRECT");
     return;
@@ -90,7 +91,7 @@ app.post("/register", (req, res) => {
   users[id] = {
     id,
     email,
-    password,
+    password: bcrypt.hashSync(password, 10),
   };
   res.cookie('user_id', id);
   res.redirect("/urls");
