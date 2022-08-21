@@ -146,8 +146,9 @@ app.post("/urls", (req, res) => {
 
 // Redirect to original url
 app.get("/u/:id", (req, res) => {
-  if (!isLoggedin(req)) {
-    res.redirect("/login");
+  const { id } = req.params;
+  if (!(id in urlDatabase)) {
+    res.redirect("/error/404");
     return;
   }
   const longURL = urlDatabase[req.params.id];
