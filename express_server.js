@@ -180,6 +180,10 @@ app.post("/urls/:id/delete", (req, res) => {
     return;
   }
   const { id } = req.params;
+  if (!canAccessURL(req, id)) {
+    res.redirect("/error/403_NO_ACCESS");
+    return;
+  }
   delete urlDatabase[id];
   res.redirect('/urls');
 });
@@ -191,6 +195,10 @@ app.post("/urls/:id", (req, res) => {
     return;
   }
   const { id } = req.params;
+  if (!canAccessURL(req, id)) {
+    res.redirect("/error/403_NO_ACCESS");
+    return;
+  }
   const { newLongURL } = req.body;
   urlDatabase[id]["longURL"] = newLongURL;
   res.redirect(`/urls/${id}`);
@@ -226,7 +234,7 @@ const generateRandomString = () => {
 
 /**
  * @param {string} email
- * @returns {object | null} user || null
+ * @returns {object | null} user | null
  */
 const getUserByEmail = (email) => {
   for (const user in users) {
