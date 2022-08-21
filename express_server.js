@@ -212,6 +212,9 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
+/**
+ * @return {string} randomString
+ */
 const generateRandomString = () => {
   let randomString = '';
   do {
@@ -221,6 +224,10 @@ const generateRandomString = () => {
   return randomString;
 };
 
+/**
+ * @param {string} email
+ * @returns {object | null} user || null
+ */
 const getUserByEmail = (email) => {
   for (const user in users) {
     if (users[user]['email'] === email) {
@@ -230,6 +237,10 @@ const getUserByEmail = (email) => {
   return null;
 };
 
+/**
+ * @param {Request} req
+ * @returns {boolean}
+ */
 const isLoggedin = (req) => {
   return req.cookies['user_id'] !== undefined;
 };
