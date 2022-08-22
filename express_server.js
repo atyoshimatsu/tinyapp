@@ -1,10 +1,14 @@
-const { PORT, ID_LENGTH, CHARACTERS, ERROR_MESSAGES } = require('./constants');
+const { PORT, ID_LENGTH, CHARACTERS, ERROR_MESSAGES, SESSION_KEYS } = require('./constants');
 const bcrypt = require("bcryptjs");
 const express = require("express");
-const cookieParser = require("cookie-parser");
+const cookieSession = require('cookie-session');
 const app = express();
 
-app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: SESSION_KEYS,
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
@@ -41,7 +45,7 @@ app.get("/login", (req, res) => {
     res.redirect("/urls");
     return;
   }
-  const userId = req.cookies['user_id'];
+  const userId = req.session.user_id;
   const templateVars = {
     title: 'Login',
     user: users[userId],
@@ -57,12 +61,13 @@ app.post("/login", (req, res) => {
     res.redirect("/error/403_INCORRECT");
     return;
   }
-  res.cookie('user_id', users[user]['id']);
+  // eslint-disable-next-line camelcase
+  req.session.user_id = users[user]['id'];
   res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('user_id');
+  req.session = null;
   res.redirect("/login");
 });
 
@@ -71,7 +76,7 @@ app.get("/register", (req, res) => {
     res.redirect("/urls");
     return;
   }
-  const userId = req.cookies['user_id'];
+  const userId = req.session.user_id;
   const templateVars = {
     title: 'Register',
     user: users[userId],
@@ -93,7 +98,8 @@ app.post("/register", (req, res) => {
     email,
     password: bcrypt.hashSync(password, 10),
   };
-  res.cookie('user_id', id);
+  // eslint-disable-next-line camelcase
+  req.session.user_id = id; // set id to the cookie
   res.redirect("/urls");
 });
 
@@ -106,7 +112,7 @@ app.get("/urls", (req, res) => {
     res.redirect("/login");
     return;
   }
-  const userId = req.cookies['user_id'];
+  const userId = req.session.user_id;
   const templateVars = {
     title: 'URLs',
     user: users[userId],
@@ -120,7 +126,7 @@ app.get("/urls/new", (req, res) => {
     res.redirect("/login");
     return;
   }
-  const userId = req.cookies['user_id'];
+  const userId = req.session.user_id;
   const templateVars = {
     title: 'New URL',
     user: users[userId],
@@ -139,7 +145,7 @@ app.get("/urls/:id", (req, res) => {
     res.redirect("/error/403_NO_ACCESS");
     return;
   }
-  const userId = req.cookies['user_id'];
+  const userId = req.session.user_id;
   const templateVars = {
     title: 'URL',
     user: users[userId],
@@ -158,7 +164,7 @@ app.post("/urls", (req, res) => {
   const newId = generateRandomString();
   urlDatabase[newId] = {
     longURL: req.body.longURL,
-    userId: req.cookies['user_id'],
+    userId: req.session.user_id,
   };
   res.redirect(`/urls/${newId}`);
 });
@@ -208,7 +214,7 @@ app.post("/urls/:id", (req, res) => {
 // display error page
 app.get("/error/:error_code", (req, res) => {
   const errorCode = req.params.error_code;
-  const userId = req.cookies['user_id'];
+  const userId = req.session.user_id;
   const templateVars = {
     title: 'Error',
     user: users[userId],
@@ -227,6 +233,7 @@ app.listen(PORT, () => {
 const generateRandomString = () => {
   let randomString = '';
   do {
+    // eslint-disable-next-line no-unused-vars
     randomString = new Array(ID_LENGTH).fill(null).map(n => CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)]).join('');
   } while (randomString in urlDatabase);
 
@@ -251,7 +258,7 @@ const getUserByEmail = (email) => {
  * @returns {boolean}
  */
 const isLoggedin = (req) => {
-  return req.cookies['user_id'] !== undefined;
+  return req.session.user_id !== undefined;
 };
 
 /**
@@ -277,6 +284,6 @@ const urlsForUser = (userId) => {
  * @returns {boolean}
  */
 const canAccessURL = (req, urlId) => {
-  const userId = req.cookies['user_id'];
+  const userId = req.session.user_id;
   return urlId in urlsForUser(userId);
 };

@@ -7,10 +7,12 @@ const ERROR_MESSAGES = {
   '403_NO_ACCESS': 'You can not access this page.',
   '404': 'The page is NOT Found.',
 };
+const SESSION_KEYS = ['tiny_app_key'];
 
 module.exports = {
   PORT,
   ID_LENGTH,
   CHARACTERS,
   ERROR_MESSAGES,
+  SESSION_KEYS,
 };
