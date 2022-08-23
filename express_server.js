@@ -1,8 +1,16 @@
-const { PORT, ID_LENGTH, CHARACTERS, ERROR_MESSAGES, SESSION_KEYS } = require('./constants');
+const { PORT, ERROR_MESSAGES, SESSION_KEYS } = require('./constants');
 const bcrypt = require("bcryptjs");
 const express = require("express");
 const cookieSession = require('cookie-session');
 const app = express();
+const {
+  generateRandomString,
+  getUserByEmail,
+  isLoggedin,
+  urlsForUser,
+  canAccessURL,
+} = require('./helper');
+
 
 app.use(cookieSession({
   name: 'session',
@@ -55,7 +63,7 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
-  const user = getUserByEmail(email);
+  const user = getUserByEmail(email, users);
   if (email === '' || password === '') {
     res.status(400);
     res.redirect("/error/400_LOGIN");
@@ -92,12 +100,12 @@ app.get("/register", (req, res) => {
 // Create new user
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
-  if (email === '' || password === '' || getUserByEmail(email) !== null) {
+  if (email === '' || password === '' || getUserByEmail(email, users) !== null) {
     res.status(400);
     res.redirect("/error/400_REGISTER");
     return;
   }
-  const id = generateRandomString();
+  const id = generateRandomString(urlDatabase);
   users[id] = {
     id,
     email,
@@ -121,7 +129,7 @@ app.get("/urls", (req, res) => {
   const templateVars = {
     title: 'URLs',
     user: users[userId],
-    urls: urlsForUser(userId),
+    urls: urlsForUser(userId, urlDatabase),
   };
   res.render('urls_index', templateVars);
 });
@@ -146,7 +154,7 @@ app.get("/urls/:id", (req, res) => {
     return;
   }
   const { id } = req.params;
-  if (!canAccessURL(req, id)) {
+  if (!canAccessURL(req, id, urlDatabase)) {
     res.redirect("/error/403_NO_ACCESS");
     return;
   }
@@ -166,7 +174,7 @@ app.post("/urls", (req, res) => {
     res.redirect("/login");
     return;
   }
-  const newId = generateRandomString();
+  const newId = generateRandomString(urlDatabase);
   urlDatabase[newId] = {
     longURL: req.body.longURL,
     userId: req.session.user_id,
@@ -192,7 +200,7 @@ app.post("/urls/:id/delete", (req, res) => {
     return;
   }
   const { id } = req.params;
-  if (!canAccessURL(req, id)) {
+  if (!canAccessURL(req, id, urlDatabase)) {
     res.redirect("/error/403_NO_ACCESS");
     return;
   }
@@ -207,7 +215,7 @@ app.post("/urls/:id", (req, res) => {
     return;
   }
   const { id } = req.params;
-  if (!canAccessURL(req, id)) {
+  if (!canAccessURL(req, id, urlDatabase)) {
     res.redirect("/error/403_NO_ACCESS");
     return;
   }
@@ -231,64 +239,3 @@ app.get("/error/:error_code", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
-/**
- * @return {string} randomString
- */
-const generateRandomString = () => {
-  let randomString = '';
-  do {
-    // eslint-disable-next-line no-unused-vars
-    randomString = new Array(ID_LENGTH).fill(null).map(n => CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)]).join('');
-  } while (randomString in urlDatabase);
-
-  return randomString;
-};
-
-/**
- * @param {string} email
- * @returns {object | null} user | null
- */
-const getUserByEmail = (email) => {
-  for (const user in users) {
-    if (users[user]['email'] === email) {
-      return user;
-    }
-  }
-  return null;
-};
-
-/**
- * @param {Request} req
- * @returns {boolean}
- */
-const isLoggedin = (req) => {
-  return req.session.user_id !== undefined;
-};
-
-/**
- * @param {string} userId
- * @returns {object} urls
- */
-const urlsForUser = (userId) => {
-  const urls = {};
-  for (const urlId in urlDatabase) {
-    if (urlDatabase[urlId]['userId'] === userId) {
-      urls[urlId] = {
-        longURL: urlDatabase[urlId]['longURL'],
-        userId,
-      };
-    }
-  }
-  return urls;
-};
-
-/**
- * @param {Request} req
- * @param {string} urlId
- * @returns {boolean}
- */
-const canAccessURL = (req, urlId) => {
-  const userId = req.session.user_id;
-  return urlId in urlsForUser(userId);
-};
