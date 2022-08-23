@@ -7,7 +7,6 @@ const {
   urlsForUser,
   canAccessURL,
 } = require('../helpers');
-const { app } = require('../express_server');
 
 const urlDatabase = {
   "b2xVn2": {
@@ -59,5 +58,27 @@ describe('getUserByEmail', () => {
   it('should return null with invalid email', () => {
     const user = getUserByEmail("test@example.com", testUsers)
     assert.isNull(user);
+  });
+});
+
+describe('urlsForUser', () => {
+  it('should return urls that are belonged a given user', () => {
+    const urls = urlsForUser('userRandomID', urlDatabase);
+    const expectedUrls = {
+      "b2xVn2": {
+        longURL: "http://www.lighthouselabs.ca",
+        userId: "userRandomID",
+      },
+      "9sm5xK": {
+        longURL: "http://www.google.com",
+        userId: "userRandomID",
+      },
+    };
+    assert.deepEqual(urls, expectedUrls);
+  });
+
+  it('should return empty object for not existing user', () => {
+    const urls = urlsForUser('user3RandomID', urlDatabase);
+    assert.deepEqual(urls, {});
   });
 });
