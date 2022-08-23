@@ -56,6 +56,11 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   const user = getUserByEmail(email);
+  if (email === '' || password === '') {
+    res.status(400);
+    res.redirect("/error/400_LOGIN");
+    return;
+  }
   if (!user || !bcrypt.compareSync(password, users[user]['password'])) {
     res.status(403);
     res.redirect("/error/403_INCORRECT");
@@ -89,7 +94,7 @@ app.post("/register", (req, res) => {
   const { email, password } = req.body;
   if (email === '' || password === '' || getUserByEmail(email) !== null) {
     res.status(400);
-    res.redirect("/error/400");
+    res.redirect("/error/400_REGISTER");
     return;
   }
   const id = generateRandomString();
