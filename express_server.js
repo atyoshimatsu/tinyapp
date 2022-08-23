@@ -74,7 +74,7 @@ app.post("/login", (req, res) => {
     return;
   }
   // eslint-disable-next-line camelcase
-  req.session.user_id = users[user]['id'];
+  req.session.user_id = users[user]['id']; // set userId to the cookie
   res.redirect("/urls");
 });
 
@@ -111,7 +111,7 @@ app.post("/register", (req, res) => {
     password: bcrypt.hashSync(password, 10),
   };
   // eslint-disable-next-line camelcase
-  req.session.user_id = id; // set id to the cookie
+  req.session.user_id = id; // set userId to the cookie
   res.redirect("/urls");
 });
 
@@ -238,5 +238,3 @@ app.get("/error/:error_code", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
-module.exports =  { app };
