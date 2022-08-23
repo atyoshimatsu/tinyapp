@@ -16,7 +16,7 @@ const { ID_LENGTH, CHARACTERS } = require('./constants');
 
 /**
  * @param {string} email
- * @returns {object | null} user | null
+ * @returns {object | undefined} user | undefined
  */
 const getUserByEmail = (email, userDataBase) => {
   for (const user in userDataBase) {
@@ -24,7 +24,7 @@ const getUserByEmail = (email, userDataBase) => {
       return user;
     }
   }
-  return null;
+  return undefined;
 };
 
 /**
