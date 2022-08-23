@@ -9,8 +9,7 @@ const {
   isLoggedin,
   urlsForUser,
   canAccessURL,
-} = require('./helper');
-
+} = require('./helpers');
 
 app.use(cookieSession({
   name: 'session',
@@ -239,3 +238,5 @@ app.get("/error/:error_code", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+module.exports =  { app };
