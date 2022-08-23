@@ -51,12 +51,12 @@ describe('generateRandomString', () => {
 
 describe('getUserByEmail', () => {
   it('should return a user with valid email', () => {
-    const user = getUserByEmail("user@example.com", testUsers)
+    const user = getUserByEmail("user@example.com", testUsers);
     const expectedUserID = "userRandomID";
     assert.equal(user, expectedUserID);
   });
   it('should return undefined with invalid email', () => {
-    const user = getUserByEmail("test@example.com", testUsers)
+    const user = getUserByEmail("test@example.com", testUsers);
     assert.isUndefined(user);
   });
 });
@@ -80,5 +80,38 @@ describe('urlsForUser', () => {
   it('should return empty object for not existing user', () => {
     const urls = urlsForUser('user3RandomID', urlDatabase);
     assert.deepEqual(urls, {});
+  });
+});
+
+describe('isLoggedin', () => {
+  it('should return true if a user is loggedin', () => {
+    // eslint-disable-next-line camelcase
+    const mockReq = { session: { user_id: 'userRandomID' } };
+    const loggedin = isLoggedin(mockReq);
+    assert.isTrue(loggedin);
+  });
+
+  it('should return false if a user is not loggedin', () => {
+    // eslint-disable-next-line camelcase
+    const mockReq = { session: { user_id: undefined } };
+    const loggedin = isLoggedin(mockReq);
+    assert.isFalse(loggedin);
+  });
+});
+
+describe('canAccessURL', () => {
+  const urlId = 'b2xVn2';
+  it('should return true if the user has the given url', () => {
+    // eslint-disable-next-line camelcase
+    const mockReq = { session: { user_id: 'userRandomID' } };
+    const access = canAccessURL(mockReq, urlId, urlDatabase);
+    assert.isTrue(access);
+  });
+
+  it('should return false if the user dose not have the given url', () => {
+    // eslint-disable-next-line camelcase
+    const mockReq = { session: { user_id: 'user2RandomID' } };
+    const access = canAccessURL(mockReq, urlId, urlDatabase);
+    assert.isFalse(access);
   });
 });

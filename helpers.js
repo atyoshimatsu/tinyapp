@@ -1,10 +1,9 @@
 const { ID_LENGTH, CHARACTERS } = require('./constants');
 
-
 /**
  * @return {string} randomString
  */
- const generateRandomString = (urlDatabase) => {
+const generateRandomString = (urlDatabase) => {
   let randomString = '';
   do {
     // eslint-disable-next-line no-unused-vars
@@ -55,6 +54,7 @@ const urlsForUser = (userId, urlDatabase) => {
 /**
  * @param {Request} req
  * @param {string} urlId
+ * @param {pbject} urlDatabase
  * @returns {boolean}
  */
 const canAccessURL = (req, urlId, urlDatabase) => {
@@ -68,4 +68,4 @@ module.exports = {
   isLoggedin,
   urlsForUser,
   canAccessURL,
-}
+};
