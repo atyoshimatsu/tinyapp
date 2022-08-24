@@ -212,7 +212,7 @@ app.delete("/urls/:id/delete", (req, res) => {
 });
 
 // Update a existing url
-app.post("/urls/:id", (req, res) => {
+app.put("/urls/:id", (req, res) => {
   if (!isLoggedin(req)) {
     res.redirect("/login");
     return;

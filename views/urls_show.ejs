@@ -15,7 +15,7 @@
     <div class="card text-center">
       <div class="card-body">
         <h5 class="card-title">EDIT</h5>
-        <form class="form-inline justify-content-center" action="/urls/<%= id %>" method="POST">
+        <form class="form-inline justify-content-center" action="/urls/<%= id %>?_method=put" method="POST">
           <div class="form-group mb-2">
             <label for="longURL">New URL:</label>
             <input
