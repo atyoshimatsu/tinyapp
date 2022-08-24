@@ -1,4 +1,5 @@
 const { PORT, ERROR_MESSAGES, SESSION_KEYS } = require('./constants');
+const morgan = require('morgan');
 const bcrypt = require("bcryptjs");
 const express = require("express");
 const methodOverride = require('method-override');
@@ -12,6 +13,7 @@ const {
 } = require('./helpers');
 
 const app = express();
+app.use(morgan('tiny'));
 app.use(cookieSession({
   name: 'session',
   keys: SESSION_KEYS,
