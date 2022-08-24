@@ -18,12 +18,12 @@
         </thead>
         <tbody>
           <% for (const urlId in urls) { %>
-            <% const visitors = urls[urlId]["visitHistory"].map(h => h['visitorId']); %>
+            <% const visitors = urls[urlId]["visitHistories"].map(h => h['visitorId']); %>
             <% const uniqueVisitors = new Set(visitors); %>
             <tr>
               <td style="vertical-align: middle;"><%= urlId %></td>
               <td style="vertical-align: middle;"><%= urls[urlId]["longURL"] %></td>
-              <td style="vertical-align: middle;"><%= urls[urlId]["visitHistory"].length %></td>
+              <td style="vertical-align: middle;"><%= urls[urlId]["visitHistories"].length %></td>
               <td style="vertical-align: middle;"><%= uniqueVisitors.size %></td>
               <td>
                 <form method="GET" action="/urls/<%= urlId %>/">

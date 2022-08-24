@@ -12,17 +12,17 @@ const urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
     userId: "userRandomID",
-    visitHistory: [],
+    visitHistories: [],
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
     userId: "userRandomID",
-    visitHistory: [],
+    visitHistories: [],
   },
   "4glap5": {
     longURL: "http://www.example.com",
     userId: "user2RandomID",
-    visitHistory: [],
+    visitHistories: [],
   },
 };
 
@@ -71,12 +71,12 @@ describe('urlsForUser', () => {
       "b2xVn2": {
         longURL: "http://www.lighthouselabs.ca",
         userId: "userRandomID",
-        visitHistory: [],
+        visitHistories: [],
       },
       "9sm5xK": {
         longURL: "http://www.google.com",
         userId: "userRandomID",
-        visitHistory: [],
+        visitHistories: [],
       },
     };
     assert.deepEqual(urls, expectedUrls);
