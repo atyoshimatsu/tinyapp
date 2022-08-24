@@ -27,14 +27,17 @@ const urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
     userId: "userRandomID",
+    visitHistory:[],
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
     userId: "userRandomID",
+    visitHistory:[],
   },
   "4glap5": {
     longURL: "http://www.example.com",
     userId: "user2RandomID",
+    visitHistory:[],
   },
 };
 
@@ -123,6 +126,10 @@ app.get("/", (req, res) => {
   res.redirect("/urls");
 });
 
+app.get("/urls/json", (req, res) => {
+  res.send(JSON.stringify(urlDatabase));
+});
+
 app.get("/urls", (req, res) => {
   if (!isLoggedin(req)) {
     res.redirect("/login");
@@ -181,6 +188,7 @@ app.post("/urls", (req, res) => {
   urlDatabase[newId] = {
     longURL: req.body.longURL,
     userId: req.session.user_id,
+    visitHistory: [],
   };
   res.redirect(`/urls/${newId}`);
 });
@@ -192,7 +200,13 @@ app.get("/u/:id", (req, res) => {
     res.redirect("/error/404");
     return;
   }
-  const longURL = urlDatabase[req.params.id]["longURL"];
+  if (!req.session.visitor_id) {
+    const visitorId = generateRandomString(urlDatabase);
+    // eslint-disable-next-line camelcase
+    req.session.visitor_id = visitorId; // set visitor_id to the cookie
+  }
+  urlDatabase[id]['visitHistory'].push({ visitorId: req.session.visitor_id, time: new Date() });
+  const longURL = urlDatabase[id]["longURL"];
   res.redirect(longURL);
 });
 

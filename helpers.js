@@ -45,6 +45,7 @@ const urlsForUser = (userId, urlDatabase) => {
       urls[urlId] = {
         longURL: urlDatabase[urlId]['longURL'],
         userId,
+        visitHistory: urlDatabase[urlId]['visitHistory'],
       };
     }
   }
