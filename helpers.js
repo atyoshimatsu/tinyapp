@@ -31,7 +31,7 @@ const getUserByEmail = (email, userDataBase) => {
  * @returns {boolean}
  */
 const isLoggedin = (req) => {
-  return req.session.user_id !== undefined;
+  return req.session.user_id !== undefined && req.session.user_id !== null;
 };
 
 /**

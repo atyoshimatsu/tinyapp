@@ -96,9 +96,16 @@ describe('isLoggedin', () => {
     assert.isTrue(loggedin);
   });
 
-  it('should return false if a user is not loggedin', () => {
+  it('should return false if a user_id is undefined', () => {
     // eslint-disable-next-line camelcase
     const mockReq = { session: { user_id: undefined } };
+    const loggedin = isLoggedin(mockReq);
+    assert.isFalse(loggedin);
+  });
+
+  it('should return false if a user_id is null', () => {
+    // eslint-disable-next-line camelcase
+    const mockReq = { session: { user_id: null } };
     const loggedin = isLoggedin(mockReq);
     assert.isFalse(loggedin);
   });

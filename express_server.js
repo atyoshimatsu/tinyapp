@@ -69,12 +69,12 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
-  const user = getUserByEmail(email, users);
   if (email === '' || password === '') {
     res.status(400);
     res.redirect("/error/400_LOGIN");
     return;
   }
+  const user = getUserByEmail(email, users);
   if (!user || !bcrypt.compareSync(password, users[user]['password'])) {
     res.status(403);
     res.redirect("/error/403_INCORRECT");
@@ -86,7 +86,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  req.session = null;
+  req.session.user_id = null;
   res.redirect("/login");
 });
 
