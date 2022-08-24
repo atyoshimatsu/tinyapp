@@ -1,8 +1,8 @@
 const { PORT, ERROR_MESSAGES, SESSION_KEYS } = require('./constants');
 const bcrypt = require("bcryptjs");
 const express = require("express");
+const methodOverride = require('method-override');
 const cookieSession = require('cookie-session');
-const app = express();
 const {
   generateRandomString,
   getUserByEmail,
@@ -11,11 +11,13 @@ const {
   canAccessURL,
 } = require('./helpers');
 
+const app = express();
 app.use(cookieSession({
   name: 'session',
   keys: SESSION_KEYS,
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
+app.use(methodOverride('_method'));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
@@ -99,7 +101,9 @@ app.get("/register", (req, res) => {
 // Create new user
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
-  if (email === '' || password === '' || getUserByEmail(email, users) !== null) {
+  console.log(email, password);
+  console.log(getUserByEmail(email, users));
+  if (email === '' || password === '' || getUserByEmail(email, users) !== undefined) {
     res.status(400);
     res.redirect("/error/400_REGISTER");
     return;
@@ -193,7 +197,7 @@ app.get("/u/:id", (req, res) => {
 });
 
 // Delete a url
-app.post("/urls/:id/delete", (req, res) => {
+app.delete("/urls/:id/delete", (req, res) => {
   if (!isLoggedin(req)) {
     res.redirect("/login");
     return;
