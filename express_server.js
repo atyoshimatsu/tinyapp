@@ -123,6 +123,10 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/", (req, res) => {
+  if (!isLoggedin(req)) {
+    res.redirect("/login");
+    return;
+  }
   res.redirect("/urls");
 });
 
