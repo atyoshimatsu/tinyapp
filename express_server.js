@@ -101,8 +101,6 @@ app.get("/register", (req, res) => {
 // Create new user
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
-  console.log(getUserByEmail(email, users));
   if (email === '' || password === '' || getUserByEmail(email, users) !== undefined) {
     res.status(400);
     res.redirect("/error/400_REGISTER");
