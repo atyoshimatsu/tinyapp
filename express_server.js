@@ -238,17 +238,17 @@ app.delete("/urls/:id/delete", (req, res) => {
 // Update a existing url
 app.put("/urls/:id", (req, res) => {
   if (!isLoggedin(req)) {
-    res.redirect("/login");
+    res.redirect("/error/403_NO_ACCESS");
     return;
   }
   const { id } = req.params;
   if (!canAccessURL(req, id, urlDatabase)) {
-    res.redirect("/error/403_NO_ACCESS");
+    res.redirect("/error/404");
     return;
   }
   const { newLongURL } = req.body;
   urlDatabase[id]["longURL"] = newLongURL;
-  res.redirect(`/urls/${id}`);
+  res.redirect('/urls');
 });
 
 // display error page
