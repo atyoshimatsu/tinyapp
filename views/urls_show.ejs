@@ -11,8 +11,6 @@
           Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
         </p>
       </div>
-    </div>
-    <div class="card text-center">
       <div class="card-body">
         <h5 class="card-title">EDIT</h5>
         <form class="form-inline justify-content-center" action="/urls/<%= id %>?_method=put" method="POST">
@@ -29,9 +27,25 @@
           </div>
         </form>
       </div>
-    </div>
-    <div class="card text-center">
       <div class="card-body">
+        <table class="table" style="text-align: center;">
+          <thead>
+            <tr>
+              <th scope="col">Total Visits</th>
+              <th scope="col">Visit Users</th>
+              <th scope="col">Created Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% const visitors = url["visitHistories"].map(h => h['visitorId']); %>
+            <% const uniqueVisitors = new Set(visitors); %>
+            <tr>
+              <td style="vertical-align: middle;"><%= url["visitHistories"].length %></td>
+              <td style="vertical-align: middle;"><%= uniqueVisitors.size %></td>
+              <td style="vertical-align: middle;"><%= url["createdDate"] %></td>
+            </tr>
+          </tbody>
+        </table>
         <h5 class="card-title">VISIT HISTORY</h5>
         <table class="table" style="text-align: center;">
           <thead>
