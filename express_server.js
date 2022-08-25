@@ -27,7 +27,9 @@ const urlDatabase = {
     longURL: "http://www.lighthouselabs.ca",
     userId: "userRandomID",
     createdDate: "8/21/2022",
-    visitHistories:[],
+    visitHistories:[
+      { visitorId: 'f3t4gz', time: new Date() }
+    ],
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
