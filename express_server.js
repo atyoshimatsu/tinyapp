@@ -13,7 +13,7 @@ const {
 } = require('./helpers');
 
 const app = express();
-app.use(morgan('tiny'));
+app.use(morgan('dev'));
 app.use(cookieSession({
   name: 'session',
   keys: SESSION_KEYS,
