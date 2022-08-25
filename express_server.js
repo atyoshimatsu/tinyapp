@@ -17,7 +17,6 @@ app.use(morgan('tiny'));
 app.use(cookieSession({
   name: 'session',
   keys: SESSION_KEYS,
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 app.use(methodOverride('_method'));
 app.set("view engine", "ejs");
@@ -89,6 +88,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
+  // eslint-disable-next-line camelcase
   req.session.user_id = null;
   res.redirect("/login");
 });
