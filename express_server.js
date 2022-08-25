@@ -167,12 +167,12 @@ app.get("/urls/new", (req, res) => {
 // Refer a url
 app.get("/urls/:id", (req, res) => {
   if (!isLoggedin(req)) {
-    res.redirect("/login");
+    res.redirect("/error/403_NO_ACCESS");
     return;
   }
   const { id } = req.params;
   if (!canAccessURL(req, id, urlDatabase)) {
-    res.redirect("/error/403_NO_ACCESS");
+    res.redirect("/error/404");
     return;
   }
   const userId = req.session.user_id;
