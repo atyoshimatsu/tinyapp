@@ -12,6 +12,7 @@
             <th scope="col">Long URL</th>
             <th scope="col">Total Visits</th>
             <th scope="col">Visit Users</th>
+            <th scope="col">Created Date</th>
             <th scope="col">EDIT</th>
             <th scope="col">DELETE</th>
           </tr>
@@ -25,6 +26,7 @@
               <td style="vertical-align: middle;"><%= urls[urlId]["longURL"] %></td>
               <td style="vertical-align: middle;"><%= urls[urlId]["visitHistories"].length %></td>
               <td style="vertical-align: middle;"><%= uniqueVisitors.size %></td>
+              <td style="vertical-align: middle;"><%= urls[urlId]["createdDate"] %></td>
               <td>
                 <form method="GET" action="/urls/<%= urlId %>/">
                   <button type="submit" class="btn btn-outline-primary">EDIT</button>

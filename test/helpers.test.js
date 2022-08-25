@@ -12,16 +12,19 @@ const urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
     userId: "userRandomID",
+    createdDate: "8/21/2022",
     visitHistories: [],
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
     userId: "userRandomID",
+    createdDate: "7/16/2021",
     visitHistories: [],
   },
   "4glap5": {
     longURL: "http://www.example.com",
     userId: "user2RandomID",
+    createdDate: "4/27/2022",
     visitHistories: [],
   },
 };
