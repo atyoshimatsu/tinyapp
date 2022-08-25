@@ -188,7 +188,7 @@ app.get("/urls/:id", (req, res) => {
 // Create new url
 app.post("/urls", (req, res) => {
   if (!isLoggedin(req)) {
-    res.redirect("/login");
+    res.redirect("/error/403_NO_ACCESS");
     return;
   }
   const newId = generateRandomString(urlDatabase);
@@ -214,6 +214,7 @@ app.get("/u/:id", (req, res) => {
     // eslint-disable-next-line camelcase
     req.session.visitor_id = visitorId; // set visitor_id to the cookie
   }
+  // track visit history
   urlDatabase[id]['visitHistories'].push({ visitorId: req.session.visitor_id, time: new Date() });
   const longURL = urlDatabase[id]["longURL"];
   res.redirect(longURL);
