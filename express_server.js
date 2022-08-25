@@ -1,4 +1,5 @@
-const { PORT, ERROR_MESSAGES, SESSION_KEYS } = require('./constants');
+const { PORT, ERROR_MESSAGES } = require('./constants');
+require('dotenv').config();
 const morgan = require('morgan');
 const bcrypt = require("bcryptjs");
 const express = require("express");
@@ -16,7 +17,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(cookieSession({
   name: 'session',
-  keys: SESSION_KEYS,
+  keys: [process.env.SECRET_KEY],
 }));
 app.use(methodOverride('_method'));
 app.set("view engine", "ejs");
