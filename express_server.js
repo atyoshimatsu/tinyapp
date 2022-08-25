@@ -139,7 +139,7 @@ app.get("/urls/json", (req, res) => {
 
 app.get("/urls", (req, res) => {
   if (!isLoggedin(req)) {
-    res.redirect("/login");
+    res.redirect("/error/403_NO_ACCESS");
     return;
   }
   const userId = req.session.user_id;
