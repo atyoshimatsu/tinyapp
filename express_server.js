@@ -133,10 +133,6 @@ app.get("/", (req, res) => {
   res.redirect("/urls");
 });
 
-app.get("/urls/json", (req, res) => {
-  res.send(JSON.stringify(urlDatabase));
-});
-
 app.get("/urls", (req, res) => {
   if (!isLoggedin(req)) {
     res.redirect("/error/403_NO_ACCESS");
