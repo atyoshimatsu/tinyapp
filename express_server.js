@@ -121,7 +121,7 @@ app.post("/register", (req, res) => {
   users[id] = {
     id,
     email,
-    password: bcrypt.hashSync(password, 10),
+    password: bcrypt.hashSync(password),
   };
   // eslint-disable-next-line camelcase
   req.session.user_id = id; // set userId to the cookie
