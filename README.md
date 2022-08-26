@@ -5,10 +5,10 @@ TinyApp is a full stack web application built with Node and Express that allows 
 ## Final Product
 
 ### Index View
-[![Image from Gyazo](https://i.gyazo.com/69b947a90d0a3131b8b17664e0d1a0db.png)](https://gyazo.com/69b947a90d0a3131b8b17664e0d1a0db)
+!["Screenshot of URLs Index"](https://github.com/atyoshimatsu/tinyapp/blob/main/docs/urls_index.png)
 
 ### Detail of URL
-[![Image from Gyazo](https://i.gyazo.com/0b3ab569f9ca4ca9d7dbc6e954fc2022.png)](https://gyazo.com/0b3ab569f9ca4ca9d7dbc6e954fc2022)
+!["Screenshot of URLs detail"](https://github.com/atyoshimatsu/tinyapp/blob/main/docs/url_detail.png)
 
 ## Dependencies
 - bcryptjs
