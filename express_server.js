@@ -11,6 +11,7 @@ const {
   isLoggedin,
   urlsForUser,
   canAccessURL,
+  getUniqueVisitors,
 } = require('./helpers');
 
 const app = express();
@@ -179,7 +180,10 @@ app.get("/urls/:id", (req, res) => {
     title: 'URL',
     user: users[userId],
     id,
-    url: urlDatabase[id],
+    url: {
+      ...urlDatabase[id],
+      uniqueVisitors: getUniqueVisitors(id, urlDatabase),
+    }
   };
   res.render("urls_show", templateVars);
 });
@@ -263,5 +267,5 @@ app.get("/error/:error_code", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`Tiny app listening on port ${PORT}!`);
 });

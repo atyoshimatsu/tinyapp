@@ -37,11 +37,9 @@
             </tr>
           </thead>
           <tbody>
-            <% const visitors = url["visitHistories"].map(h => h['visitorId']); %>
-            <% const uniqueVisitors = new Set(visitors); %>
             <tr>
               <td style="vertical-align: middle;"><%= url["visitHistories"].length %></td>
-              <td style="vertical-align: middle;"><%= uniqueVisitors.size %></td>
+              <td style="vertical-align: middle;"><%= url["uniqueVisitors"] %></td>
               <td style="vertical-align: middle;"><%= url["createdDate"] %></td>
             </tr>
           </tbody>
