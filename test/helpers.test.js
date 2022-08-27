@@ -7,6 +7,7 @@ const {
   urlsForUser,
   canAccessURL,
   getUniqueVisitors,
+  getErrorMessage,
 } = require('../helpers');
 
 const urlDatabase = {
@@ -155,5 +156,47 @@ describe('getUniqueVisitors', () => {
     const urlId = '9sm5xK';
     const uniqueVisitors = getUniqueVisitors(urlId, urlDatabase);
     assert.equal(uniqueVisitors, 0);
+  });
+});
+
+describe('getErrorMessage', () => {
+  it('should return proper error message for statusCode 400 and referer "/register" ', () => {
+    const statusCode = '400';
+    const referer = 'http://www.example.com/register';
+    const errorMessage = getErrorMessage(statusCode, referer);
+    const expectedMessage = 'The Email or password might be empty, or the email is already existing.';
+    assert.equal(errorMessage, expectedMessage);
+  });
+
+  it('should return proper error message for statusCode 400 and referer "/login" ', () => {
+    const statusCode = '400';
+    const referer = 'http://www.example.com/login';
+    const errorMessage = getErrorMessage(statusCode, referer);
+    const expectedMessage = 'The Email or password might be empty.';
+    assert.equal(errorMessage, expectedMessage);
+  });
+
+  it('should return proper error message for statusCode 403 and referer "/login" ', () => {
+    const statusCode = '403';
+    const referer = 'http://www.example.com/login';
+    const errorMessage = getErrorMessage(statusCode, referer);
+    const expectedMessage = 'The Email or password is NOT correct, or the email is NOT existing.';
+    assert.equal(errorMessage, expectedMessage);
+  });
+
+  it('should return proper error message for statusCode 403 and referer undefined ', () => {
+    const statusCode = '403';
+    const referer = undefined;
+    const errorMessage = getErrorMessage(statusCode, referer);
+    const expectedMessage = 'You can not access this page.';
+    assert.equal(errorMessage, expectedMessage);
+  });
+
+  it('should return proper error message for statusCode 404 and referer undefined ', () => {
+    const statusCode = '404';
+    const referer = undefined;
+    const errorMessage = getErrorMessage(statusCode, referer);
+    const expectedMessage = 'The page is NOT Found.';
+    assert.equal(errorMessage, expectedMessage);
   });
 });
