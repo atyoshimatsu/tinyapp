@@ -176,8 +176,8 @@ describe('getErrorMessage', () => {
     assert.equal(errorMessage, expectedMessage);
   });
 
-  it('should return proper error message for statusCode 403 and referer "/login" ', () => {
-    const statusCode = '403';
+  it('should return proper error message for statusCode 401 and referer "/login" ', () => {
+    const statusCode = '401';
     const referer = 'http://www.example.com/login';
     const errorMessage = getErrorMessage(statusCode, referer);
     const expectedMessage = 'The Email or password is NOT correct, or the email is NOT existing.';

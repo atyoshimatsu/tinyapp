@@ -82,7 +82,7 @@ app.post("/login", (req, res) => {
   }
   const user = getUserByEmail(email, users);
   if (!user || !bcrypt.compareSync(password, users[user]['password'])) {
-    res.redirect("/error/403");
+    res.redirect("/error/401");
     return;
   }
   // eslint-disable-next-line camelcase
@@ -256,6 +256,7 @@ app.put("/urls/:id", (req, res) => {
 app.get("/error/:error_code", (req, res) => {
   const statusCode = req.params.error_code;
   const referer = req.get('Referer');
+  console.log(referer);
   const errorMessage = getErrorMessage(statusCode, referer);
   const userId = req.session.user_id;
   const templateVars = {

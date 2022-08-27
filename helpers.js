@@ -91,12 +91,12 @@ const getErrorMessage = (statusCode, referer) => {
   }
 
 
-  if (statusCode === '403' && !!referer && referer.includes('login')) {
-    return ERROR_MESSAGES['403']['login'];
+  if (statusCode === '401') {
+    return ERROR_MESSAGES['401'];
   }
 
   if (statusCode === '403') {
-    return ERROR_MESSAGES['403']['other'];
+    return ERROR_MESSAGES['403'];
   }
 
   return ERROR_MESSAGES['404'];

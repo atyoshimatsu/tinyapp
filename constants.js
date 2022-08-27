@@ -6,10 +6,8 @@ const ERROR_MESSAGES = {
     register: 'The Email or password might be empty, or the email is already existing.',
     login: 'The Email or password might be empty.',
   },
-  '403': {
-    login: 'The Email or password is NOT correct, or the email is NOT existing.',
-    other: 'You can not access this page.',
-  },
+  '401': 'The Email or password is NOT correct, or the email is NOT existing.',
+  '403': 'You can not access this page.',
   '404': 'The page is NOT Found.',
 };
 
