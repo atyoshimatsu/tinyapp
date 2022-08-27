@@ -6,6 +6,7 @@ const {
   isLoggedin,
   urlsForUser,
   canAccessURL,
+  getUniqueVisitors,
 } = require('../helpers');
 
 const urlDatabase = {
@@ -13,7 +14,11 @@ const urlDatabase = {
     longURL: "http://www.lighthouselabs.ca",
     userId: "userRandomID",
     createdDate: "8/21/2022",
-    visitHistories: [],
+    visitHistories: [
+      { visitorId: 'eiG484', time: '2021-12-09T00:19:09.556Z' },
+      { visitorId: 'L0hnVt', time: '2022-02-15T00:05:35.937Z' },
+      { visitorId: 'eiG484', time: '2022-05-28T00:19:41.149Z' },
+    ],
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
@@ -75,19 +80,25 @@ describe('urlsForUser', () => {
         longURL: "http://www.lighthouselabs.ca",
         userId: "userRandomID",
         createdDate: "8/21/2022",
-        visitHistories: [],
+        visitHistories: [
+          { visitorId: 'eiG484', time: '2021-12-09T00:19:09.556Z' },
+          { visitorId: 'L0hnVt', time: '2022-02-15T00:05:35.937Z' },
+          { visitorId: 'eiG484', time: '2022-05-28T00:19:41.149Z' },
+        ],
+        uniqueVisitors: 2,
       },
       "9sm5xK": {
         longURL: "http://www.google.com",
         userId: "userRandomID",
         createdDate: "7/16/2021",
         visitHistories: [],
+        uniqueVisitors: 0,
       },
     };
     assert.deepEqual(urls, expectedUrls);
   });
 
-  it('should return empty object for not existing user', () => {
+  it('should return empty object for no existing user', () => {
     const urls = urlsForUser('user3RandomID', urlDatabase);
     assert.deepEqual(urls, {});
   });
@@ -130,5 +141,19 @@ describe('canAccessURL', () => {
     const mockReq = { session: { user_id: 'user2RandomID' } };
     const access = canAccessURL(mockReq, urlId, urlDatabase);
     assert.isFalse(access);
+  });
+});
+
+describe('getUniqueVisitors', () => {
+  it('should return 2 for urlId "b2xVn2"', () => {
+    const urlId = 'b2xVn2';
+    const uniqueVisitors = getUniqueVisitors(urlId, urlDatabase);
+    assert.equal(uniqueVisitors, 2);
+  });
+
+  it('should return 0 for urlId "9sm5xK"', () => {
+    const urlId = '9sm5xK';
+    const uniqueVisitors = getUniqueVisitors(urlId, urlDatabase);
+    assert.equal(uniqueVisitors, 0);
   });
 });

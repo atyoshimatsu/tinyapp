@@ -47,6 +47,7 @@ const urlsForUser = (userId, urlDatabase) => {
         userId,
         createdDate: urlDatabase[urlId]['createdDate'],
         visitHistories: urlDatabase[urlId]['visitHistories'],
+        uniqueVisitors: getUniqueVisitors(urlId, urlDatabase),
       };
     }
   }
@@ -56,12 +57,23 @@ const urlsForUser = (userId, urlDatabase) => {
 /**
  * @param {Request} req
  * @param {string} urlId
- * @param {pbject} urlDatabase
+ * @param {object} urlDatabase
  * @returns {boolean}
  */
 const canAccessURL = (req, urlId, urlDatabase) => {
   const userId = req.session.user_id;
   return urlId in urlsForUser(userId, urlDatabase);
+};
+
+/**
+ * @param {string} urlId
+ * @param {object} urlDatabase
+ * @returns {number} uniqueVisitors
+ */
+const getUniqueVisitors = (urlId, urlDatabase) => {
+  const visitors = urlDatabase[urlId]["visitHistories"].map(h => h['visitorId']);
+  const uniqueVisitors = new Set(visitors);
+  return uniqueVisitors.size;
 };
 
 module.exports = {
@@ -70,4 +82,5 @@ module.exports = {
   isLoggedin,
   urlsForUser,
   canAccessURL,
+  getUniqueVisitors,
 };
