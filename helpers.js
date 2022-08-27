@@ -1,4 +1,4 @@
-const { ID_LENGTH, CHARACTERS } = require('./constants');
+const { ID_LENGTH, CHARACTERS, ERROR_MESSAGES } = require('./constants');
 
 /**
  * @return {string} randomString
@@ -76,6 +76,32 @@ const getUniqueVisitors = (urlId, urlDatabase) => {
   return uniqueVisitors.size;
 };
 
+/**
+ * @param {string} statusCode
+ * @param {sring} referer
+ * @returns {string} errorMessage
+ */
+const getErrorMessage = (statusCode, referer) => {
+  if (statusCode === '400' && referer.includes('login')) {
+    return ERROR_MESSAGES['400']['login'];
+  }
+
+  if (statusCode === '400' && referer.includes('register')) {
+    return ERROR_MESSAGES['400']['register'];
+  }
+
+
+  if (statusCode === '403' && !!referer && referer.includes('login')) {
+    return ERROR_MESSAGES['403']['login'];
+  }
+
+  if (statusCode === '403') {
+    return ERROR_MESSAGES['403']['other'];
+  }
+
+  return ERROR_MESSAGES['404'];
+};
+
 module.exports = {
   generateRandomString,
   getUserByEmail,
@@ -83,4 +109,5 @@ module.exports = {
   urlsForUser,
   canAccessURL,
   getUniqueVisitors,
+  getErrorMessage,
 };
