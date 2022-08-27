@@ -11,40 +11,40 @@ const {
 } = require('../helpers');
 
 const urlDatabase = {
-  "b2xVn2": {
-    longURL: "http://www.lighthouselabs.ca",
-    userId: "userRandomID",
-    createdDate: "8/21/2022",
+  'b2xVn2': {
+    longURL: 'http://www.lighthouselabs.ca',
+    userId: 'userRandomID',
+    createdDate: '8/21/2022',
     visitHistories: [
       { visitorId: 'eiG484', time: '2021-12-09T00:19:09.556Z' },
       { visitorId: 'L0hnVt', time: '2022-02-15T00:05:35.937Z' },
       { visitorId: 'eiG484', time: '2022-05-28T00:19:41.149Z' },
     ],
   },
-  "9sm5xK": {
-    longURL: "http://www.google.com",
-    userId: "userRandomID",
-    createdDate: "7/16/2021",
+  '9sm5xK': {
+    longURL: 'http://www.google.com',
+    userId: 'userRandomID',
+    createdDate: '7/16/2021',
     visitHistories: [],
   },
-  "4glap5": {
-    longURL: "http://www.example.com",
-    userId: "user2RandomID",
-    createdDate: "4/27/2022",
+  '4glap5': {
+    longURL: 'http://www.example.com',
+    userId: 'user2RandomID',
+    createdDate: '4/27/2022',
     visitHistories: [],
   },
 };
 
 const testUsers = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+  'userRandomID': {
+    id: 'userRandomID',
+    email: 'user@example.com',
+    password: 'purple-monkey-dinosaur'
   },
-  "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
+  'user2RandomID': {
+    id: 'user2RandomID',
+    email: 'user2@example.com',
+    password: 'dishwasher-funk'
   }
 };
 
@@ -63,12 +63,12 @@ describe('generateRandomString', () => {
 
 describe('getUserByEmail', () => {
   it('should return a user with valid email', () => {
-    const user = getUserByEmail("user@example.com", testUsers);
-    const expectedUserID = "userRandomID";
+    const user = getUserByEmail('user@example.com', testUsers);
+    const expectedUserID = 'userRandomID';
     assert.equal(user, expectedUserID);
   });
   it('should return undefined with invalid email', () => {
-    const user = getUserByEmail("test@example.com", testUsers);
+    const user = getUserByEmail('test@example.com', testUsers);
     assert.isUndefined(user);
   });
 });
@@ -77,10 +77,10 @@ describe('urlsForUser', () => {
   it('should return urls that are belonged a given user', () => {
     const urls = urlsForUser('userRandomID', urlDatabase);
     const expectedUrls = {
-      "b2xVn2": {
-        longURL: "http://www.lighthouselabs.ca",
-        userId: "userRandomID",
-        createdDate: "8/21/2022",
+      'b2xVn2': {
+        longURL: 'http://www.lighthouselabs.ca',
+        userId: 'userRandomID',
+        createdDate: '8/21/2022',
         visitHistories: [
           { visitorId: 'eiG484', time: '2021-12-09T00:19:09.556Z' },
           { visitorId: 'L0hnVt', time: '2022-02-15T00:05:35.937Z' },
@@ -88,10 +88,10 @@ describe('urlsForUser', () => {
         ],
         uniqueVisitors: 2,
       },
-      "9sm5xK": {
-        longURL: "http://www.google.com",
-        userId: "userRandomID",
-        createdDate: "7/16/2021",
+      '9sm5xK': {
+        longURL: 'http://www.google.com',
+        userId: 'userRandomID',
+        createdDate: '7/16/2021',
         visitHistories: [],
         uniqueVisitors: 0,
       },
@@ -160,7 +160,7 @@ describe('getUniqueVisitors', () => {
 });
 
 describe('getErrorMessage', () => {
-  it('should return proper error message for statusCode 400 and referer "/register" ', () => {
+  it('should return proper error message for statusCode 400 and referer "/register"', () => {
     const statusCode = '400';
     const referer = 'http://www.example.com/register';
     const errorMessage = getErrorMessage(statusCode, referer);
@@ -168,7 +168,7 @@ describe('getErrorMessage', () => {
     assert.equal(errorMessage, expectedMessage);
   });
 
-  it('should return proper error message for statusCode 400 and referer "/login" ', () => {
+  it('should return proper error message for statusCode 400 and referer "/login"', () => {
     const statusCode = '400';
     const referer = 'http://www.example.com/login';
     const errorMessage = getErrorMessage(statusCode, referer);
@@ -176,7 +176,7 @@ describe('getErrorMessage', () => {
     assert.equal(errorMessage, expectedMessage);
   });
 
-  it('should return proper error message for statusCode 401 and referer "/login" ', () => {
+  it('should return proper error message for statusCode 401 and referer "/login"', () => {
     const statusCode = '401';
     const referer = 'http://www.example.com/login';
     const errorMessage = getErrorMessage(statusCode, referer);
