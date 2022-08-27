@@ -1,4 +1,4 @@
-const { PORT, ERROR_MESSAGES } = require('./constants');
+const { PORT } = require('./constants');
 require('dotenv').config();
 const morgan = require('morgan');
 const bcrypt = require("bcryptjs");
@@ -12,6 +12,7 @@ const {
   urlsForUser,
   canAccessURL,
   getUniqueVisitors,
+  getErrorMessage,
 } = require('./helpers');
 
 const app = express();
@@ -76,14 +77,12 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   if (email === '' || password === '') {
-    res.status(400);
-    res.redirect("/error/400_LOGIN");
+    res.redirect("/error/400");
     return;
   }
   const user = getUserByEmail(email, users);
   if (!user || !bcrypt.compareSync(password, users[user]['password'])) {
-    res.status(403);
-    res.redirect("/error/403_INCORRECT");
+    res.redirect("/error/403");
     return;
   }
   // eslint-disable-next-line camelcase
@@ -114,8 +113,7 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
   if (email === '' || password === '' || getUserByEmail(email, users) !== undefined) {
-    res.status(400);
-    res.redirect("/error/400_REGISTER");
+    res.redirect("/error/400");
     return;
   }
   const id = generateRandomString(urlDatabase);
@@ -139,7 +137,7 @@ app.get("/", (req, res) => {
 
 app.get("/urls", (req, res) => {
   if (!isLoggedin(req)) {
-    res.redirect("/error/403_NO_ACCESS");
+    res.redirect("/error/403");
     return;
   }
   const userId = req.session.user_id;
@@ -167,12 +165,12 @@ app.get("/urls/new", (req, res) => {
 // Refer a url
 app.get("/urls/:id", (req, res) => {
   if (!isLoggedin(req)) {
-    res.redirect("/error/403_NO_ACCESS");
+    res.redirect("/error/403");
     return;
   }
   const { id } = req.params;
   if (!canAccessURL(req, id, urlDatabase)) {
-    res.redirect("/error/404");
+    res.redirect("/error/403");
     return;
   }
   const userId = req.session.user_id;
@@ -191,7 +189,7 @@ app.get("/urls/:id", (req, res) => {
 // Create new url
 app.post("/urls", (req, res) => {
   if (!isLoggedin(req)) {
-    res.redirect("/error/403_NO_ACCESS");
+    res.redirect("/error/403");
     return;
   }
   const newId = generateRandomString(urlDatabase);
@@ -226,12 +224,12 @@ app.get("/u/:id", (req, res) => {
 // Delete a url
 app.delete("/urls/:id/delete", (req, res) => {
   if (!isLoggedin(req)) {
-    res.redirect("/error/403_NO_ACCESS");
+    res.redirect("/error/403");
     return;
   }
   const { id } = req.params;
   if (!canAccessURL(req, id, urlDatabase)) {
-    res.redirect("/error/404");
+    res.redirect("/error/403");
     return;
   }
   delete urlDatabase[id];
@@ -241,12 +239,12 @@ app.delete("/urls/:id/delete", (req, res) => {
 // Update a existing url
 app.put("/urls/:id", (req, res) => {
   if (!isLoggedin(req)) {
-    res.redirect("/error/403_NO_ACCESS");
+    res.redirect("/error/403");
     return;
   }
   const { id } = req.params;
   if (!canAccessURL(req, id, urlDatabase)) {
-    res.redirect("/error/404");
+    res.redirect("/error/403");
     return;
   }
   const { newLongURL } = req.body;
@@ -256,14 +254,21 @@ app.put("/urls/:id", (req, res) => {
 
 // display error page
 app.get("/error/:error_code", (req, res) => {
-  const errorCode = req.params.error_code;
+  const statusCode = req.params.error_code;
+  const referer = req.get('Referer');
+  const errorMessage = getErrorMessage(statusCode, referer);
   const userId = req.session.user_id;
   const templateVars = {
     title: 'Error',
     user: users[userId],
-    errorMessage: ERROR_MESSAGES[errorCode],
+    errorMessage,
   };
-  res.render("40x_error", templateVars);
+  res.status(statusCode).render("40x_error", templateVars);
+});
+
+// return error page to all requests except above routes
+app.all("*", (req,res) => {
+  res.redirect("/error/404");
 });
 
 app.listen(PORT, () => {
